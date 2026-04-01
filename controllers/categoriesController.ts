@@ -28,24 +28,30 @@ export const getCategories = (async (req: Request, res: Response) => {
 });
 
 export const deleteCategories = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const categories = await prisma.categorie.delete({
         where: {
-            id: parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien supprimer",data:categories})
 })
 
 export const updateCategories = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const {name, coleur} = req.body;
     const categories = await prisma.categorie.update({
         data: {
             name,coleur
         },
         where:{
-            id:parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien modifier",data:categories})

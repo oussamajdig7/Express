@@ -57,24 +57,30 @@ export const getVendeurs = (async (req: Request, res: Response) => {
 });
 
 export const deleteVendeurs = (async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const vendeur = await prisma.vendeur.delete({
         where: {
-            id: parseInt(id)
+            id
         }
     })
     res.status(201).json({ massage: "bien supprimer", data: vendeur })
 })
 
 export const updateVendeurs = (async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const { name, email, password } = req.body;
     const vendeur = await prisma.vendeur.update({
         data: {
             name, email, password
         },
         where: {
-            id: parseInt(id)
+            id
         }
     })
     res.status(201).json({ massage: "bien modifier", data: vendeur })

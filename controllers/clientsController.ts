@@ -38,24 +38,30 @@ export const getClients = (async (req: Request, res: Response) => {
 });
 
 export const deleteClients = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const client = await prisma.client.delete({
         where: {
-            id: parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien supprimer",data:client})
 })
 
 export const updateClients = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const {name, prenom} = req.body;
     const client = await prisma.client.update({
         data:{
             name,prenom
         },
         where:{
-            id:parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien modifier",data:client})

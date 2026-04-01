@@ -38,24 +38,30 @@ export const getProduits = (async (req: Request, res: Response) => {
 });
 
 export const deleteProduits = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const produit = await prisma.produit.delete({
         where: {
-            id: parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien supprimer",data:produit})
 })
 
 export const updateProduits = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const {name, description, price} = req.body;
     const produits = await prisma.produit.update({
         data:{
             name,description,price
         },
         where:{
-            id:parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien modifier",data:produits})

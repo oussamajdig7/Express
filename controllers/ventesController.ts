@@ -45,24 +45,30 @@ export const getventes = (async (req: Request, res: Response) => {
 });
 
 export const deleteventes = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const vente = await prisma.vente.delete({
         where: {
-            id: parseInt(id)
+            id
         }
     })
       res.status(201).json({massage:"bien supprimer",data:vente})
 })
 
 export const updateventes = (async (req: Request, res: Response) => {
-    const {id} = req.params;
+    const id = Number(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
+    if (!id) {
+        return res.status(400).json({ message: "id invalide" });
+    }
     const {Qte} = req.body;
     const vente = await prisma.vente.update({
         data:{
             Qte : Number(Qte)
         },
         where:{
-            id:parseInt(id)
+            id
         }
     })
         res.status(201).json({massage:"bien modifier",data:vente})
